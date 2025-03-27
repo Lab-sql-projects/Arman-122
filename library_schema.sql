@@ -43,7 +43,7 @@ INSERT INTO Authors (Name, Country) VALUES
 
 -- Insert sample data into Books table
 INSERT INTO Books (Title, AuthorID, YearPublished, Genre) VALUES
-('Harry Potter and the Sorcerer\'s Stone', 1, 1997, 'Fantasy'),
+('Harry Potter and the Sorcerer''s Stone', 1, 1997, 'Fantasy'),
 ('1984', 2, 1949, 'Dystopian'),
 ('To Kill a Mockingbird', 3, 1960, 'Fiction'),
 ('The Hobbit', 4, 1937, 'Fantasy');
