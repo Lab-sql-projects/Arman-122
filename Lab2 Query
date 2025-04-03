@@ -1,0 +1,43 @@
+-- 1. INNER JOIN example: Get books and their authors
+SELECT Books.Title, Authors.Name
+FROM Books
+INNER JOIN Authors ON Books.AuthorID = Authors.AuthorID;
+
+-- 2. LEFT JOIN example: Get borrowers and the books they have borrowed
+SELECT Borrowers.Name, Books.Title
+FROM Borrowers
+LEFT JOIN Loans ON Borrowers.BorrowerID = Loans.BorrowerID
+LEFT JOIN Books ON Loans.BookID = Books.BookID;
+
+-- 3. UPDATE example: Update the status of books that are currently checked out
+UPDATE Books
+SET Status = 'Returned'
+WHERE Status = 'Checked Out';
+
+-- 4. DELETE example: Remove borrowers who haven't borrowed any books
+DELETE FROM Borrowers
+WHERE BorrowerID NOT IN (SELECT BorrowerID FROM Loans);
+
+-- 5. Aggregation example: Count the number of books for each author
+SELECT Authors.Name, COUNT(Books.BookID) AS NumberOfBooks
+FROM Authors
+INNER JOIN Books ON Authors.AuthorID = Books.AuthorID
+GROUP BY Authors.Name
+HAVING COUNT(Books.BookID) > 5;
+
+-- 6. Subquery example: Find borrowers who borrowed more books than the average borrower
+SELECT Name
+FROM Borrowers
+WHERE BorrowerID IN (
+    SELECT BorrowerID
+    FROM Loans
+    GROUP BY BorrowerID
+    HAVING COUNT(BookID) > (
+        SELECT AVG(BookCount)
+        FROM (
+            SELECT COUNT(BookID) AS BookCount
+            FROM Loans
+            GROUP BY BorrowerID
+        )
+    )
+);
