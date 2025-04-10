@@ -1,30 +1,36 @@
--- Create Authors table
-CREATE TABLE IF NOT EXISTS Authors (
+-- DROP TABLES IF THEY EXIST (for resetting schema)
+DROP TABLE IF EXISTS Loans;
+DROP TABLE IF EXISTS Books;
+DROP TABLE IF EXISTS Authors;
+DROP TABLE IF EXISTS Borrowers;
+
+-- 1. AUTHORS TABLE
+CREATE TABLE Authors (
     AuthorID INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT NOT NULL,
     Country TEXT
 );
 
--- Create Books table
-CREATE TABLE IF NOT EXISTS Books (
+-- 2. BOOKS TABLE
+CREATE TABLE Books (
     BookID INTEGER PRIMARY KEY AUTOINCREMENT,
-    Title TEXT NOT NULL,
+    Title TEXT NOT NULL UNIQUE,  -- UNIQUE title constraint
     AuthorID INTEGER,
-    YearPublished INTEGER,
+    YearPublished INTEGER CHECK (YearPublished > 0),  -- CHECK constraint for valid year
     Genre TEXT,
     FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID)
 );
 
--- Create Borrowers table
-CREATE TABLE IF NOT EXISTS Borrowers (
+-- 3. BORROWERS TABLE
+CREATE TABLE Borrowers (
     BorrowerID INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT NOT NULL,
     Email TEXT,
-    Phone TEXT
+    Phone TEXT CHECK (LENGTH(Phone) >= 8 AND LENGTH(Phone) <= 15)  -- CHECK constraint for phone length
 );
 
--- Create Loans table
-CREATE TABLE IF NOT EXISTS Loans (
+-- 4. LOANS TABLE
+CREATE TABLE Loans (
     LoanID INTEGER PRIMARY KEY AUTOINCREMENT,
     BookID INTEGER,
     BorrowerID INTEGER,
@@ -33,8 +39,7 @@ CREATE TABLE IF NOT EXISTS Loans (
     FOREIGN KEY (BookID) REFERENCES Books(BookID),
     FOREIGN KEY (BorrowerID) REFERENCES Borrowers(BorrowerID)
 );
-
--- Insert sample data into Authors table
+-- Insert data into Authors
 INSERT INTO Authors (Name, Country) VALUES
 ('J.K. Rowling', 'United Kingdom'),
 ('George Orwell', 'United Kingdom'),
@@ -47,7 +52,7 @@ INSERT INTO Authors (Name, Country) VALUES
 ('F. Scott Fitzgerald', 'United States'),
 ('Jane Austen', 'United Kingdom');
 
--- Insert sample data into Books table
+-- Insert data into Books
 INSERT INTO Books (Title, AuthorID, YearPublished, Genre) VALUES
 ('Harry Potter and the Sorcerer''s Stone', 1, 1997, 'Fantasy'),
 ('1984', 2, 1949, 'Dystopian'),
@@ -60,20 +65,20 @@ INSERT INTO Books (Title, AuthorID, YearPublished, Genre) VALUES
 ('The Great Gatsby', 9, 1925, 'Fiction'),
 ('Pride and Prejudice', 10, 1813, 'Romance');
 
--- Insert sample data into Borrowers table
+-- Insert data into Borrowers with valid phone numbers (8 to 15 digits)
 INSERT INTO Borrowers (Name, Email, Phone) VALUES
-('Alice Johnson', 'alice@example.com', '555-1234'),
-('Bob Smith', 'bob@example.com', '555-5678'),
-('Charlie Brown', 'charlie@example.com', '555-9876'),
-('David Williams', 'david@example.com', '555-1111'),
-('Eva Davis', 'eva@example.com', '555-2222'),
-('Frank Moore', 'frank@example.com', '555-3333'),
-('Grace Taylor', 'grace@example.com', '555-4444'),
-('Henry White', 'henry@example.com', '555-5555'),
-('Irene Clark', 'irene@example.com', '555-6666'),
-('Jack Adams', 'jack@example.com', '555-7777');
+('Alice Johnson', 'alice@example.com', '5551234567'),
+('Bob Smith', 'bob@example.com', '5555678123'),
+('Charlie Brown', 'charlie@example.com', '5559876432'),
+('David Williams', 'david@example.com', '5551111222'),
+('Eva Davis', 'eva@example.com', '5552222333'),
+('Frank Moore', 'frank@example.com', '5553333444'),
+('Grace Taylor', 'grace@example.com', '5554444555'),
+('Henry White', 'henry@example.com', '5555555666'),
+('Irene Clark', 'irene@example.com', '5556666777'),
+('Jack Adams', 'jack@example.com', '5557777888');
 
--- Insert sample data into Loans table
+-- Insert data into Loans
 INSERT INTO Loans (BookID, BorrowerID, LoanDate, ReturnDate) VALUES
 (1, 1, '2025-03-20', '2025-04-20'),
 (2, 2, '2025-03-21', '2025-04-21'),
